@@ -119,6 +119,7 @@ I created QueryAlchemy to bridge a gap I personally experienced: going from depe
 
 This repository was built on a blend of deep-dive documentation, interactive tutorials, and creative learning tools. These resources shaped the journey and are recommended for anyone looking to strengthen their SQL and database skills:
 
+- **🗃️ [Pagila Sample Database](https://github.com/devrimgunduz/pagila)** — A PostgreSQL-compatible adaptation of the Sakila sample database (originally for MySQL), used in this project for schema and sample data.
 - **📘 [PostgreSQL Docs](https://www.postgresql.org/docs/)** — The official, gold-standard reference for everything PostgreSQL.
 - **🧠 [Mode SQL Tutorial](https://mode.com/sql-tutorial/)** — A visual guide to SQL fundamentals with an analytics focus.
 - **⚡ [Use The Index, Luke!](https://use-the-index-luke.com/)** — Master SQL performance through indexing strategies.
