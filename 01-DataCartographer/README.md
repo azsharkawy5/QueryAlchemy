@@ -89,6 +89,7 @@ This "map" becomes the blueprint for your `JOIN` clauses.
 
 <details>
   <summary>💡 View Solution</summary>
+
 ```sql
 SELECT DISTINCT -- A customer might rent multiple action films; this ensures they appear only once.
     c.first_name,
@@ -109,9 +110,11 @@ INNER JOIN
 WHERE
     cat.name = 'Action';
 ```
-### Analysis
-*   **Readability:** `JOIN` syntax reads like a logical sentence, clearly stating how tables connect. Aliases (`c`, `r`, `i`) are essential for maintaining clarity in complex queries.
-*   **Performance:** This is the most direct and performant way to ask this question. Database query planners are highly optimized for resolving these chains.
-*   **Complexity:** The complexity is not in the SQL syntax, but in the initial problem-solving step of schema navigation.
 
-## </details>
+</details>
+
+### Analysis
+
+- **Readability:** `JOIN` syntax reads like a logical sentence, clearly stating how tables connect. Aliases (`c`, `r`, `i`) are essential for maintaining clarity in complex queries.
+- **Performance:** This is the most direct and performant way to ask this question. Database query planners are highly optimized for resolving these chains.
+- **Complexity:** The complexity is not in the SQL syntax, but in the initial problem-solving step of schema navigation.
