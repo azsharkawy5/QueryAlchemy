@@ -32,6 +32,20 @@ To follow along and run these queries yourself, you'll need your own instance of
 
 ---
 
+### 🗂️ Project Directory Structure
+
+After completing the above steps, your `01-DataCartographer/` folder should look like this:
+
+```plaintext
+01-DataCartographer/
+├── 00-pagila-schema.sql       # PostgreSQL schema (tables, indexes, etc.)
+├── 01-pagila-data.sql         # Sample data for the schema
+├── docker-compose.yml         # Spins up the PostgreSQL container
+└── README.md                  # This project’s documentation and challenges
+```
+
+---
+
 ### 🗺️ Schema Familiarization
 
 Before writing any queries, it’s helpful to review the database schema and understand how the tables relate to each other.
@@ -43,3 +57,7 @@ Before writing any queries, it’s helpful to review the database schema and und
 Understanding how `customer`, `rental`, `inventory`, `film`, and `category` are connected will make complex `JOIN`s much more intuitive.
 
 ---
+
+```
+
+```
