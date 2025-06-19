@@ -59,6 +59,59 @@ Understanding how `customer`, `rental`, `inventory`, `film`, and `category` are 
 
 ---
 
-```
+## 🚨 What is the N+1 Query Problem?
 
+Before diving into multi-`JOIN`s, it's important to understand the **N+1 problem**—a common performance pitfall when accessing related data.
+
+> **The N+1 Problem** happens when your code first runs **one query** to get a list of authors, then runs **one additional query per author** to fetch their books.
+
+> So if you have 100 authors, you're running **1 query to get authors + 100 queries to get books**—a total of 101 queries.
+
+This quickly becomes inefficient and slows down your app as the data grows.
+
+**The solution?** Use a single SQL query with a `JOIN` to fetch all authors and their books in one go. Let the database do the heavy lifting.
+
+---
+
+## Part 1: The Multi-`JOIN` Chain
+
+### The Challenge
+
+> **Task:** Generate a list containing the first name, last name, and email of every customer who has ever rented a film in the 'Action' category. Each customer should only appear once.
+
+### Mental Model Building: Thinking Like a Cartographer
+
+Before writing any code, look at the database schema as a map. Your job is to find the route from your starting point (`customer`) to your destination (`category`). Don't proceed until you can trace the path of foreign keys:
+`customer` -> `rental` -> `inventory` -> `film` -> `film_category` -> `category`.
+This "map" becomes the blueprint for your `JOIN` clauses.
+
+### The Solution Query
+
+<details>
+  <summary>💡 View Solution</summary>
+```sql
+SELECT DISTINCT -- A customer might rent multiple action films; this ensures they appear only once.
+    c.first_name,
+    c.last_name,
+    c.email
+FROM
+    customer AS c
+INNER JOIN
+    rental AS r ON c.customer_id = r.customer_id
+INNER JOIN
+    inventory AS i ON r.inventory_id = i.inventory_id
+INNER JOIN
+    film AS f ON i.film_id = f.film_id
+INNER JOIN
+    film_category AS fc ON f.film_id = fc.film_id
+INNER JOIN
+    category AS cat ON fc.category_id = cat.category_id
+WHERE
+    cat.name = 'Action';
 ```
+### Analysis
+*   **Readability:** `JOIN` syntax reads like a logical sentence, clearly stating how tables connect. Aliases (`c`, `r`, `i`) are essential for maintaining clarity in complex queries.
+*   **Performance:** This is the most direct and performant way to ask this question. Database query planners are highly optimized for resolving these chains.
+*   **Complexity:** The complexity is not in the SQL syntax, but in the initial problem-solving step of schema navigation.
+
+## </details>
