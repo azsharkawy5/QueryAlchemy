@@ -122,3 +122,103 @@ WHERE
 - **Readability:** `JOIN` syntax reads like a logical sentence, clearly stating how tables connect. Aliases (`c`, `r`, `i`) are essential for maintaining clarity in complex queries.
 - **Performance:** This is the most direct and performant way to ask this question. Database query planners are highly optimized for resolving these chains.
 - **Complexity:** The complexity is not in the SQL syntax, but in the initial problem-solving step of schema navigation.
+
+---
+
+## Part 2: The `LEFT JOIN` and the "Zero-Count" Trap
+
+### The Challenge
+
+> **Task:** Generate a report of all film titles and the number of times each has been rented. **Crucially, you must include films that have never been rented, showing a count of 0.**
+
+### Mental Model Building: Enrichment vs. Filtering
+
+Think of joins in two ways:
+
+- `INNER JOIN` is a **filter**. It only keeps rows that have a match on both sides. It reduces your dataset.
+- `LEFT JOIN` is an **enricher**. It keeps everything from the "left" table and adds information from the "right" table if it exists.
+  Since we must keep all films, we must start with the `film` table and use `LEFT JOIN` to _enrich_ it with rental data.
+
+### The Solution Query
+
+<details>
+  <summary>💡 View Solution</summary>
+
+```sql
+SELECT
+    f.title,
+    COUNT(r.rental_id) AS rental_count -- COUNT() ignores NULLs, automatically giving us 0 for non-rented films.
+FROM
+    film AS f
+LEFT JOIN
+    inventory AS i ON f.film_id = i.film_id
+LEFT JOIN -- This must also be a LEFT JOIN to preserve films with inventory but no rentals.
+    rental AS r ON i.inventory_id = r.inventory_id
+GROUP BY
+    f.title
+ORDER BY
+    rental_count DESC;
+```
+
+</details>
+
+### Analysis
+
+- **Readability:** `LEFT JOIN` explicitly signals the query's intent: "start with all films and add rental data if it exists."
+- **Performance:** While `LEFT JOIN` can process more rows than an `INNER JOIN`, it is the **only correct and performant way** to solve this specific problem, as the alternative (many individual queries) would be far slower.
+- **Complexity:** The conceptual leap is understanding that a single `INNER JOIN` in the chain will negate the "keep all" effect of preceding `LEFT JOIN`s.
+
+## Part 3: Filtering on Aggregates with `HAVING`
+
+### The Challenge
+
+> **Task:** The marketing team wants to reward loyal customers. Produce a list of "power users" by finding all customers who have rented **more than 35 films** in total.
+
+### Mental Model Building: The SQL Order of Operations
+
+A query is not executed in the order it's written. The database follows a logical processing order. Understanding this is key to knowing where to filter.
+
+1.  `FROM` and `JOIN`s assemble the initial dataset.
+2.  `WHERE` filters individual rows.
+3.  `GROUP BY` collapses rows into groups.
+4.  Aggregate functions (`COUNT`, `SUM`, etc.) calculate values for each group.
+5.  `HAVING` filters the _groups_ based on the aggregate results.
+6.  `SELECT` determines the final output columns.
+7.  `ORDER BY` sorts the final result.
+    Since we need to filter on a `COUNT()`, the filter must come _after_ `GROUP BY`. That means we must use `HAVING`.
+
+### The Solution Query
+
+<details>
+  <summary>💡 View Solution</summary>
+
+```sql
+SELECT
+    c.first_name,
+    c.last_name,
+    COUNT(r.rental_id) AS rental_count
+FROM
+    customer AS c
+INNER JOIN
+    rental AS r ON c.customer_id = r.customer_id
+GROUP BY
+    c.customer_id -- Group by the primary key for accuracy and correctness.
+HAVING
+    COUNT(r.rental_id) > 35
+ORDER BY
+    rental_count DESC;
+```
+
+</details>
+
+### 🧠 Brain Teaser
+
+> **Question:** Why can't we use COUNT(rental_count) rather than COUNT(r.rental_id) in the `HAVING` clause?
+
+### Analysis
+
+- **Readability:** The `GROUP BY ... HAVING` structure is a standard, highly readable pattern for analytical reporting.
+- **Performance:** This is the standard, optimized way to perform this operation. Shifting this logic to the application layer would be drastically less performant.
+- **Complexity:** The difficulty lies in memorizing the logical order of operations and the fundamental difference between `WHERE` and `HAVING`.
+
+---
