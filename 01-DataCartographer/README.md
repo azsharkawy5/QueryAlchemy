@@ -113,6 +113,10 @@ WHERE
 
 </details>
 
+### 🧠 Brain Teaser
+
+> **Challenge:** Generate the same report, but using a `GROUP BY` clause instead of `DISTINCT`. How does this change the query?
+
 ### Analysis
 
 - **Readability:** `JOIN` syntax reads like a logical sentence, clearly stating how tables connect. Aliases (`c`, `r`, `i`) are essential for maintaining clarity in complex queries.
