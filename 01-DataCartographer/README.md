@@ -41,6 +41,7 @@ After completing the above steps, your `01-DataCartographer/` folder should look
 ├── 00-pagila-schema.sql       # PostgreSQL schema (tables, indexes, etc.)
 ├── 01-pagila-data.sql         # Sample data for the schema
 ├── docker-compose.yml         # Spins up the PostgreSQL container
+├── pagila-data/               # Contains the pagila data dump
 └── README.md                  # This project’s documentation and challenges
 ```
 
