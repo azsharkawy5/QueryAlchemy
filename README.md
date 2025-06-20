@@ -98,6 +98,22 @@ cd QueryAlchemy/01-DataCartographer/
 
 ---
 
+### 🧠 Study Approach
+
+> **1. Try solving it yourself first.**
+> Don't jump to the answer — give the problem a real shot on your own.
+
+> **2. Read the mental model.**
+> If you're stuck or unsure, study the mental model provided. It’s designed to guide your thinking, not give away the answer.
+
+> **3. Try again.**
+> After reading the mental model, **re-attempt the problem**. You'll likely approach it with a sharper mindset.
+
+> **4. Then review the solution.**
+> Finally, check the provided solution. Compare it with your approach — what’s similar, what’s different, and what can you improve?
+
+---
+
 ## 🌍 License & Contribution
 
 **License**: MIT — use, fork, or remix freely.  
