@@ -222,3 +222,65 @@ ORDER BY
 - **Complexity:** The difficulty lies in memorizing the logical order of operations and the fundamental difference between `WHERE` and `HAVING`.
 
 ---
+
+## Part 4: The Engineer's Choice (`JOIN` vs. Subquery)
+
+### The Challenge
+
+> **Task:** An actress, PENELOPE GUINESS, is visiting the store. Quickly pull a list of all films she has starred in.
+
+### Mental Model Building: Procedural vs. Declarative
+
+There are two ways to think about this problem:
+
+- **The Procedural Mindset (Subquery):** Think in steps. "First, get the actor's ID. Second, use that ID to get their film IDs. Third, use those IDs to get the titles." This maps directly to a nested subquery.
+- **The Declarative Mindset (JOIN):** Think about the final state. "I need a dataset that includes information from `film`, `film_actor`, and `actor`, where the actor's name is 'Penelope Guiness'." This maps directly to a `JOIN` structure.
+
+### Solution A: The Subquery (Procedural)
+
+<details>
+  <summary>💡 View Solution</summary>
+
+```sql
+SELECT
+    title
+FROM
+    film
+WHERE
+    film_id IN ( -- Step 3
+        SELECT film_id FROM film_actor WHERE actor_id = ( -- Step 2
+            SELECT actor_id FROM actor WHERE first_name = 'PENELOPE' AND last_name = 'GUINESS' -- Step 1
+        )
+    );
+```
+
+</details>
+
+### Solution B: The JOIN (Declarative)
+
+<details>
+  <summary>💡 View Solution</summary>
+
+```sql
+SELECT
+    f.title
+FROM
+    film AS f
+INNER JOIN
+    film_actor AS fa ON f.film_id = fa.film_id
+INNER JOIN
+    actor AS a ON fa.actor_id = a.actor_id
+WHERE
+    a.first_name = 'PENELOPE' AND a.last_name = 'GUINESS';
+```
+
+### Analysis: A Head-to-Head Comparison
+
+| Aspect          | `JOIN` Approach                                                                                                          | `Subquery` Approach                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Readability** | Often preferred by SQL veterans. Reads like a single, cohesive description of the desired data.                          | Can be easier for beginners to write as it breaks the problem into smaller steps. Can become hard to read when deeply nested.                       |
+| **Performance** | Generally favored. Gives the query optimizer a complete view of all tables, allowing for better optimization strategies. | Modern optimizers often rewrite this into a `JOIN` anyway, making performance identical. However, in some complex cases, it can be less performant. |
+
+# Next Steps
+
+Now that you've completed this project, consider tackling the next one in the series: [02-SchemaSculptor](../02-SchemaSculptor/README.md), where you'll design a robust database schema from scratch.
