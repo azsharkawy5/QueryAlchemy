@@ -94,3 +94,18 @@ After applying all three normal forms, we end up with a clean, logical structure
 **The Payoff:** Now when Sarah changes her phone number, you update one record in one place. When Dr. Smith gets promoted to department head, you update her information once, and it's automatically reflected across all her courses. When a course gets renamed, you change it in one location, and every student's transcript is automatically accurate.
 
 This is the power of normalization: it transforms a chaotic, error-prone system into an elegant, maintainable foundation where every piece of information has exactly one authoritative home. Just like organizing your house, it might take more initial effort to set up proper storage systems, but it saves countless hours of frustration and prevents serious problems down the road.
+
+---
+
+## Part 2: The Challenge - The Business Requirements
+
+Here is the set of requirements for our "TaskHub" application. Your challenge is to think about what tables and columns would be needed to satisfy these rules.
+
+- **Users:** We need to store users. Each user has a unique username, a required and unique email, a password hash, and a creation date.
+- **Projects:** Users can create projects. A project has a name and is owned by a single user. A user cannot have two projects with the same name.
+- **Tasks:** A project contains tasks. Each task has a title, a status ('To Do', 'In Progress', or 'Done'), and must belong to a project.
+- **Assignments:** A task can be assigned to multiple users. A user can be assigned to multiple tasks.
+
+**Before looking at the solution, try sketching out the tables on a piece of paper. How would you connect them? What constraints would you need?**
+
+---
