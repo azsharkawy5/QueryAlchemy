@@ -109,3 +109,56 @@ Here is the set of requirements for our "TaskHub" application. Your challenge is
 **Before looking at the solution, try sketching out the tables on a piece of paper. How would you connect them? What constraints would you need?**
 
 ---
+
+## Part 3: The Solution - Your DDL Script
+
+After analyzing the requirements and applying the principles of normalization, here is the final, robust DDL script. We will break down the key architectural decisions below.
+
+<details> <summary>💡 View Solution</summary>
+
+```sql
+-- Creates a custom type to ensure status can only be one of the allowed values.
+CREATE TYPE task_status AS ENUM (
+    'To Do',
+    'In Progress',
+    'Done'
+);
+
+-- Table for storing user information
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(256) NOT NULL UNIQUE,
+    hashed_password VARCHAR(256) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table for projects, owned by a user
+CREATE TABLE projects (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    owner_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+    -- This constraint is critical for the business rule
+    UNIQUE (owner_id, name)
+);
+
+-- Table for tasks, which must belong to a project
+CREATE TABLE tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status task_status NOT NULL DEFAULT 'To Do',
+    project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- Junction table for the many-to-many relationship between tasks and users
+CREATE TABLE task_assignments (
+    task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    -- This composite primary key is the heart of this table's design
+    PRIMARY KEY (task_id, user_id)
+);
+```
+
+</details>
